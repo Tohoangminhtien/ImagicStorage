@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Drive Clone</title>
+    <link rel="stylesheet" href="/static/css/home.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">Drive</div>
+        <form action="/folder" method="post">
+            <div class="search-bar">
+                <input type="text" name="folder" placeholder="Search in Drive...">
+            </div>
+            <div class="actions">
+                <input type="submit" value="New">
+            </div>
+        </form>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <ul>
+            <li><a href="#">User: {{user_name}}</a></li>
+            <li><a href="#">Change password</a></li>
+            <li><a href="/logout">Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="file-grid">
+            {% for folder in folders %}
+            <div class="file-item" onclick="window.location.href='/folder/{{folder}}'">
+                <img src="/assets/folder.png" alt="File Icon">
+                <p id="fol">{{ folder }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+
+</html>
