@@ -1,0 +1,7 @@
+PUT http://127.0.0.1:8000/folder
+Content-Type: application/json
+
+{
+    "old_name":"Frache",
+    "new_name":"AS"
+}

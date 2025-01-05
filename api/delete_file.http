@@ -1,0 +1,7 @@
+DELETE  http://127.0.0.1:8000/folder/Gemany
+Content-Type: application/json
+
+{
+    "folder":"Gemany",
+    "name":"1.txt"
+}
