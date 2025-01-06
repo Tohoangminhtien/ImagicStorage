@@ -20,6 +20,13 @@ app.mount("/assets", StaticFiles(directory="assets"), name="assets")
 templates = Jinja2Templates(directory='templates')
 serializer = URLSafeSerializer('your-secret-key')
 
+@app.middleware("http")
+async def add_security_headers(request: Request, call_next):
+    response = await call_next(request)
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+    return response
 
 @app.middleware("http")
 async def session_middleware(request: Request, call_next):
@@ -69,6 +76,9 @@ async def check_login(request: Request, user: LoginModel):
 async def logout(request: Request, response: RedirectResponse):
     request.state.session.clear()
     response.delete_cookie("session_token")
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
     return RedirectResponse('/login', status_code=303)
 
 

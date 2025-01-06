@@ -66,7 +66,11 @@
 
     <script>
         function logout() {
-            axios.post("/logout").then(window.location.href = "/login")
+            axios.post("/logout").then(() => {
+                localStorage.clear();
+                sessionStorage.clear();
+                window.location.href = "/login"
+            })
         }
 
         let currentFolder = '';
