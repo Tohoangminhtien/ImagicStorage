@@ -57,12 +57,12 @@ async def check_login(request: Request, user: LoginModel):
     df = pd.read_csv('account/user_account.csv')
     data = {row['account']: row['password'] for _, row in df.iterrows()}
     if user.username not in data.keys():
-        return RedirectResponse('/login', status_code=303)
+        return JSONResponse({"message":"username was not exists"}, status_code=404)
     if str(data[user.username]) != str(user.password):
-        return RedirectResponse('/login', status_code=303)
+        return JSONResponse({"message":"Wrong"}, status_code=400)
     else:
         request.state.session['username'] = user.username
-        return RedirectResponse('/', status_code=303)
+        return JSONResponse({"message":"Successfully login"}, status_code=200)
 
 
 @app.post('/logout')
