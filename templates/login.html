@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <title>Login</title>
     <link rel="stylesheet" href="/static/css/login.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
 </head>
 
 <body>
@@ -15,16 +17,14 @@
                 <form class="login" method="POST" action="/login">
                     <div class="login__field">
                         <i class="login__icon fas fa-user"></i>
-                        <input type="text" class="login__input" name="username" placeholder="User name">
+                        <input type="text" class="login__input" name="username" id="username" placeholder="User name">
                     </div>
                     <div class="login__field">
                         <i class="login__icon fas fa-lock"></i>
-                        <input type="password" class="login__input" name="password" placeholder="Password">
+                        <input type="password" class="login__input" name="password" id="password"
+                            placeholder="Password">
                     </div>
-                    <button class="button login__submit">
-                        <span class="button__text">Log In Now</span>
-                        <i class="button__icon fas fa-chevron-right"></i>
-                    </button>
+                    <input type="button" name="" id="" onclick="login()" value="Login now">
                 </form>
             </div>
             <div class="screen__background">
@@ -35,6 +35,18 @@
             </div>
         </div>
     </div>
+    <script>
+        function login() {
+            axios.post('/login', {
+                "username": document.getElementById('username').value,
+                "password": document.getElementById('password').value
+            })
+                .then(res => window.location.href = "/")
+                .catch(er => {
+                    alert(er.response.data.message)
+                });
+        }
+    </script>
 </body>
 
 </html>
