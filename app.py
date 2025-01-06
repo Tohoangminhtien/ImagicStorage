@@ -173,11 +173,18 @@ async def get_file(request: Request, folder: str):
 @app.post("/folder/{folder}")
 async def upload_file(request: Request, folder: str, file: UploadFile = File(...)):
     try:
-        user_name = request.state.session['username']
+        user_name = request.state.session.get("username")
         file_location = f"data/{user_name}/{folder}/{file.filename}"
+        
+        if not user_name:
+            raise HTTPException(status_code=401, detail="Unauthorized: Please login first")
+        if contains_special_characters(file.filename) or not is_valid_image(file.filename):
+            return JSONResponse({"message": "File name invalid"}, status_code=400)
+        if os.path.exists(file_location):
+            return JSONResponse({"message": "File was exists"}, status_code=409)
         with open(file_location, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
-        return RedirectResponse(f'/folder/{folder}', status_code=303)
+            return JSONResponse({"message": f"Successfully created file"}, status_code=200)
 
     except Exception as e:
         return JSONResponse(content={"message": f"Error: {str(e)}"}, status_code=500)
@@ -192,8 +199,8 @@ async def rename_file(request: Request, file: RenameFileModel):
     if not user_name:
         raise HTTPException(status_code=401, detail="Unauthorized: Please login first")
     
-    # if contains_special_characters(file.new_name):
-    #     return JSONResponse({'message': 'New file name contains special symbols, which are not allowed.'}, status_code=400)
+    if contains_special_characters(file.new_name) or not is_valid_image(file.new_name):
+        return JSONResponse({'message': 'New file name invalid.'}, status_code=400)
     
     if not os.path.exists(old):
         return JSONResponse({'message': f'{file.old_name} was not exists'}, status_code=404)
