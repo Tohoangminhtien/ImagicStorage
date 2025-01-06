@@ -92,6 +92,8 @@ async def create_folder(request: Request, model: CreateModel):
     if not user_name:
         raise HTTPException(
             status_code=401, detail="Unauthorized: Please login first")
+    if contains_special_characters(model.name) or model.name == '':
+        return JSONResponse({"message": f"Folder name {model.name} invalid"}, status_code=400)
     if os.path.exists(directory):
         return JSONResponse({"message": f"{model.name} already exists"}, status_code=409)
     try:
